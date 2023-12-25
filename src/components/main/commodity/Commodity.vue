@@ -60,8 +60,8 @@ import Add from './Add.vue';
 import { onMounted, ref } from 'vue'
 import { ElTable, ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
-import getall from '../../../api/commodity/api';
-import { Commodity } from "../../../types/Commodity"
+import getall from '@/api/commodity/api';
+import { Commodity } from "@/types/Commodity"
 const value = ref('')
 // 生命周期
 onMounted(() => {
