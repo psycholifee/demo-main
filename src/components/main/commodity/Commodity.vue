@@ -39,7 +39,6 @@
         </div>
     </div>
 
-
     <!-- 新增按钮触发弹窗 -->
     <el-dialog v-model="dialogFormVisible" title="新增">
         <Add @after-create="afterCreate"></Add>
@@ -60,8 +59,8 @@ import Add from './Add.vue';
 import { onMounted, ref } from 'vue'
 import { ElTable, ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
-import getall from '@/api/commodity/api';
-import { Commodity } from "@/types/Commodity"
+import getList from '../../../api/commodityapi';
+import { Commodity } from "../../../types/Commodity"
 const value = ref('')
 // 生命周期
 onMounted(() => {
@@ -72,7 +71,7 @@ onMounted(() => {
 const tableData = ref<Commodity[]>([])
 
 async function getTableData() {
-    const data: any = await getall()
+    const data: any = await getList()
     tableData.value = data
 }
 
