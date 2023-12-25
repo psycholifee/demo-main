@@ -73,11 +73,7 @@ const tableData = ref<Commodity[]>([])
 
 async function getTableData() {
     const data: any = await getall()
-    console.log("api data", data);
-    console.log("tableData", tableData);
     tableData.value = data
-    console.log("tableData.values");
-
 }
 
 
