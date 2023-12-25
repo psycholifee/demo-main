@@ -15,6 +15,8 @@ export default function getList() {
         });
 }
 export function add(commodity: Commodity) {
+    console.log("add api 里面的commodity", commodity);
+
     return httpRequest.post({ url: '/add', data: commodity })
 
 }

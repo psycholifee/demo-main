@@ -36,6 +36,7 @@
 import { reactive, ref } from 'vue'
 import type { FormInstance } from 'element-plus'
 import { ElMessage } from 'element-plus'
+import { add } from '../../../api/commodityapi';
 interface RuleForm {
   name: string,
   type: string,
@@ -62,20 +63,17 @@ const emit = defineEmits(["afterCreate"])
 const submitForm = async (formEl: FormInstance | undefined) => {
 
   if (!formEl) return
-  await formEl.validate((valid, fields) => {
-    if (valid) {
+  await formEl.validate(async (flag) => {
+    if (flag) {
+      // 新增请求 api
+      const res = await add(ruleForm)
       // 触发成功事件
       emit("afterCreate", ruleForm)
       // 成功消息弹出
       ElMessage({
-        message: '创建成功',
+        message: res.msg,
         type: 'success',
       })
-      // 清空表单
-      // formEl.resetFields()
-      
-      // 提交的api
-      console.log(valid, fields, ruleForm);
     } else {
       ElMessage({
         message: '相关参数错误，请检查',

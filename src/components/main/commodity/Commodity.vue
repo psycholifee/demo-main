@@ -70,7 +70,7 @@ onMounted(() => {
 // 数据
 const tableData = ref<Commodity[]>([])
 
-// 获取商品列表
+// 获取商品列表 api
 async function getTableData() {
     const data: any = await getList()
     tableData.value = data
@@ -162,8 +162,8 @@ const handleCurrentChange = (val: number) => {
 const afterCreate = (ruleForm: any) => {
     dialogFormVisible.value = false
     console.log(ruleForm);
-    tableData.value.push(ruleForm)
-
+    // 刷新页面
+    location.reload()
 }
 
 </script>

@@ -1,5 +1,5 @@
 export interface Commodity {
-    id: number,
+    id?: number,
     name: string,
     type: string,
     specification: string,
