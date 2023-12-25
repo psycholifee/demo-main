@@ -20,7 +20,7 @@
     <el-form-item label="单价" prop="price" clearable style="width: 200px">
       <el-input v-model="ruleForm.price" />
     </el-form-item>
-    <el-form-item label="备注：" prop="remark" clearable style="width: 500px">
+    <el-form-item label="备注：" prop="remark" clearable style="width: 450px">
       <el-input v-model="ruleForm.remark" type="textarea" rows="4" />
     </el-form-item>
     <el-form-item>

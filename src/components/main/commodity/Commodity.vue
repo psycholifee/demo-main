@@ -70,6 +70,7 @@ onMounted(() => {
 // 数据
 const tableData = ref<Commodity[]>([])
 
+// 获取商品列表
 async function getTableData() {
     const data: any = await getList()
     tableData.value = data
