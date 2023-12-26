@@ -1,18 +1,12 @@
 <template>
   <el-form ref="ruleFormRef" :model="ruleForm" label-width="120px" class="demo-ruleForm" :size="formSize" status-icon>
-    <el-form-item v-show="false" label="ID :" prop="id" >
+    <el-form-item v-show="false" label="ID :" prop="id">
       <el-input v-model="ruleForm.name" />
     </el-form-item>
     <el-form-item label="产品名称：" prop="name" clearable style="width: 450px" :rules="[
       { required: true, message: '名称必填' }
     ]">
       <el-input v-model="ruleForm.name" />
-    </el-form-item>
-    <el-form-item label="类型：" prop="type">
-      <el-select v-model="ruleForm.type" placeholder="选择类型">
-        <el-option label="类型1" value="t1" />
-        <el-option label="类型2" value="t2" />
-      </el-select>
     </el-form-item>
     <el-form-item label="规格" prop="specification" clearable style="width: 450px">
       <el-input v-model="ruleForm.specification" />
@@ -43,7 +37,6 @@ import commodityApi from '../../../api/commodity';
 interface RuleForm {
   id?: number,
   name: string,
-  type: string,
   specification: string,
   unit: string,
   price?: number,
@@ -55,7 +48,6 @@ const ruleFormRef = ref<FormInstance>()
 const ruleForm = reactive<RuleForm>({
   id: undefined,
   name: '',
-  type: '',
   specification: '',
   price: undefined,
   remark: '',

@@ -14,15 +14,14 @@
                 <el-table-column type="selection" width="55" />
                 <el-table-column prop="id" label="编号" width="80" />
                 <el-table-column prop="name" label="产品名称" width="120" />
-                <el-table-column prop="type" label="类型" width="120" />
                 <el-table-column prop="specification" label="规格" width="300" />
                 <el-table-column prop="unit" label="单位" width="80" />
                 <el-table-column prop="type" label="单价" width="80" />
                 <el-table-column prop="remark" label="备注" width="300" />
                 <el-table-column fixed="right" label="操作功能" width="120">
                     <template #default="scope">
-                        <el-button link type="primary" @click="handleClickEdit(scope.$index, scope.row)">编 辑</el-button>
-                        <el-button link type="danger" @click="handleClickDel(scope.$index, scope.row)">删 除</el-button>
+                        <el-button link type="primary" @click="handleClickEdit(scope.row.id, scope.row)">编 辑</el-button>
+                        <el-button link type="danger" @click="handleClickDel(scope.row, scope.row)">删 除</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -57,17 +56,16 @@
 </template>
   
 <script lang="ts" setup>
+import { Search } from '@element-plus/icons-vue';
+import { ElMessage, ElTable } from 'element-plus';
+import { onMounted, provide, ref } from 'vue';
+import commodityApi from '../../../api/commodity';
+import { Commodity } from "../../../types/Commodity";
 import Add from './Add.vue';
-import { onMounted, ref } from 'vue'
-import { ElTable, ElMessage } from 'element-plus'
-import { Search } from '@element-plus/icons-vue'
-import commodityApi from '../../../api/commodity'
-import { Commodity } from "../../../types/Commodity"
 const value = ref('')
 // 生命周期
 onMounted(() => {
     getTableData()
-
 })
 // 数据
 const tableData = ref<Commodity[]>([])
@@ -119,18 +117,29 @@ const disabled = ref(false)
 // 查询
 const search = () => {
     console.log(queryParams);
-
 }
+
 
 // 编辑按钮
-const handleClickEdit = (index: number, row: Commodity) => {
-    console.log('Edit')
-    console.log(index, row);
+const handleClickEdit = (id: number, row: Commodity) => {
+
+    console.log('edit')
+    console.log(id, row);
+    params.value.data = row
+    params.value.flag = "edit"
+    dialogFormVisible.value = true
+
 }
+
+const params = ref({
+    flag: "",
+    data: {}
+})
+provide('editCommodity', params)
 // 删除按钮
-const handleClickDel = (index: number, row: Commodity) => {
+const handleClickDel = (id: number, row: Commodity) => {
     commodityApi.del(row.id)
-    console.log(index, row);
+    console.log("del id, row", id, row);
     // tableData.value.splice(index, 1)
     location.reload()
 
