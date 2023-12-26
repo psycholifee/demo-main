@@ -4,7 +4,7 @@
         <el-button type="success" @click="dialogFormVisible = true">新 增</el-button>
         <el-button type="primary" :icon="Search" @click="search">查 询</el-button>
         <br />
-        <el-input v-model="queryParams" placeholder="Please input" clearable style="width: 400px;" />
+        <el-input v-model="queryParams" placeholder="输入查询条件" clearable style="width: 400px;" />
     </div>
     <!-- main -->
     <div>
@@ -59,7 +59,7 @@ import Add from './Add.vue';
 import { onMounted, ref } from 'vue'
 import { ElTable, ElMessage } from 'element-plus'
 import { Search } from '@element-plus/icons-vue'
-import getList from '../../../api/commodityapi';
+import commodityApi from '../../../api/commodity'
 import { Commodity } from "../../../types/Commodity"
 const value = ref('')
 // 生命周期
@@ -72,8 +72,9 @@ const tableData = ref<Commodity[]>([])
 
 // 获取商品列表 api
 async function getTableData() {
-    const data: any = await getList()
-    tableData.value = data
+    // const data: any = await getList()
+    const res: any = await commodityApi.list()
+    tableData.value = res.data
 }
 
 
@@ -125,9 +126,9 @@ const handleClickEdit = (index: number, row: Commodity) => {
     console.log(index, row);
 }
 // 删除按钮
-const handleClickDel = (index: number, row: Commodity) => {
+const handleClickDel =  (index: number, row: Commodity) => {
     console.log('Del')
-    console.log(index, row);
+    commodityApi.del(row.id)
     tableData.value.splice(index, 1)
 
 }

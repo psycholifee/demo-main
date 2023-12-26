@@ -33,10 +33,10 @@
 </template>
   
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
-import type { FormInstance } from 'element-plus'
-import { ElMessage } from 'element-plus'
-import { add } from '../../../api/commodityapi';
+import type { FormInstance } from 'element-plus';
+import { ElMessage } from 'element-plus';
+import { reactive, ref } from 'vue';
+import commodityApi from '../../../api/commodity';
 interface RuleForm {
   name: string,
   type: string,
@@ -66,7 +66,7 @@ const submitForm = async (formEl: FormInstance | undefined) => {
   await formEl.validate(async (flag) => {
     if (flag) {
       // 新增请求 api
-      const res = await add(ruleForm)
+      const res = await commodityApi.add(ruleForm)
       // 触发成功事件
       emit("afterCreate", ruleForm)
       // 成功消息弹出
