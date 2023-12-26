@@ -4,7 +4,7 @@ export interface Commodity {
     type: string,
     specification: string,
     unit: string,
-    price: number,
+    price?: number,
     remark: string,
 
 }

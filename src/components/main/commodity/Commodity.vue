@@ -9,22 +9,24 @@
     <!-- main -->
     <div>
         <!-- 数据展示 -->
-        <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
-            <el-table-column type="selection" width="55" />
-            <el-table-column prop="id" label="编号" width="80" />
-            <el-table-column prop="name" label="产品名称" width="120" />
-            <el-table-column prop="type" label="类型" width="120" />
-            <el-table-column prop="specification" label="规格" width="300" />
-            <el-table-column prop="unit" label="单位" width="80" />
-            <el-table-column prop="type" label="单价" width="80" />
-            <el-table-column prop="remark" label="备注" width="300" />
-            <el-table-column fixed="right" label="操作功能" width="120">
-                <template #default="scope">
-                    <el-button link type="primary" @click="handleClickEdit(scope.$index, scope.row)">编 辑</el-button>
-                    <el-button link type="danger" @click="handleClickDel(scope.$index, scope.row)">删 除</el-button>
-                </template>
-            </el-table-column>
-        </el-table>
+        <el-scrollbar height="650px">
+            <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
+                <el-table-column type="selection" width="55" />
+                <el-table-column prop="id" label="编号" width="80" />
+                <el-table-column prop="name" label="产品名称" width="120" />
+                <el-table-column prop="type" label="类型" width="120" />
+                <el-table-column prop="specification" label="规格" width="300" />
+                <el-table-column prop="unit" label="单位" width="80" />
+                <el-table-column prop="type" label="单价" width="80" />
+                <el-table-column prop="remark" label="备注" width="300" />
+                <el-table-column fixed="right" label="操作功能" width="120">
+                    <template #default="scope">
+                        <el-button link type="primary" @click="handleClickEdit(scope.$index, scope.row)">编 辑</el-button>
+                        <el-button link type="danger" @click="handleClickDel(scope.$index, scope.row)">删 除</el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-scrollbar>
         <br>
         <!-- 分页功能 -->
         <div class="demo-pagination-block">
@@ -126,10 +128,11 @@ const handleClickEdit = (index: number, row: Commodity) => {
     console.log(index, row);
 }
 // 删除按钮
-const handleClickDel =  (index: number, row: Commodity) => {
-    console.log('Del')
+const handleClickDel = (index: number, row: Commodity) => {
     commodityApi.del(row.id)
-    tableData.value.splice(index, 1)
+    console.log(index, row);
+    // tableData.value.splice(index, 1)
+    location.reload()
 
 }
 
