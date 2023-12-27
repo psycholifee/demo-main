@@ -16,7 +16,7 @@
                 <el-table-column prop="name" label="产品名称" width="120" />
                 <el-table-column prop="specification" label="规格" width="300" />
                 <el-table-column prop="unit" label="单位" width="80" />
-                <el-table-column prop="type" label="单价" width="80" />
+                <el-table-column prop="price" label="单价" width="80" />
                 <el-table-column prop="remark" label="备注" width="300" />
                 <el-table-column fixed="right" label="操作功能" width="120">
                     <template #default="scope">
@@ -44,6 +44,10 @@
     <el-dialog v-model="dialogFormVisible" title="新增">
         <Add @after-create="afterCreate"></Add>
     </el-dialog>
+    <!-- 编辑按钮触发弹窗 -->
+    <el-dialog v-model="dialogFormVisibleEdit" title="编辑">
+        <Edit @after-edit="afterEdit"></Edit>
+    </el-dialog>
     <!-- 创建订单触发弹窗 -->
     <el-dialog v-model="oderDialog" title="创建订单">
         选择客户: &nbsp;&nbsp;<el-select v-model="value" class="m-2" placeholder="Select" size="large">
@@ -62,6 +66,7 @@ import { onMounted, provide, ref } from 'vue';
 import commodityApi from '../../../api/commodity';
 import { Commodity } from "../../../types/Commodity";
 import Add from './Add.vue';
+import Edit from './Edit.vue';
 const value = ref('')
 // 生命周期
 onMounted(() => {
@@ -69,15 +74,12 @@ onMounted(() => {
 })
 // 数据
 const tableData = ref<Commodity[]>([])
-
 // 获取商品列表 api
 async function getTableData() {
     // const data: any = await getList()
     const res: any = await commodityApi.list()
     tableData.value = res.data
 }
-
-
 const customers = [
     {
         value: 'Option1',
@@ -106,6 +108,7 @@ const queryParams = ref('')
 const multipleSelection = ref<Commodity[]>([])
 // 弹出框
 const dialogFormVisible = ref(false)
+const dialogFormVisibleEdit = ref(false)
 const oderDialog = ref(false)
 
 // 分页
@@ -120,21 +123,23 @@ const search = () => {
 }
 
 
+// 编辑
+// 编辑参数
+const params = ({
+    flag: true,
+    data: {},
+})
 // 编辑按钮
 const handleClickEdit = (id: number, row: Commodity) => {
 
     console.log('edit')
     console.log(id, row);
-    params.value.data = row
-    params.value.flag = "edit"
-    dialogFormVisible.value = true
+    params.data = row
+    dialogFormVisibleEdit.value = true
 
 }
 
-const params = ref({
-    flag: "",
-    data: {}
-})
+
 provide('editCommodity', params)
 // 删除按钮
 const handleClickDel = (id: number, row: Commodity) => {
@@ -144,7 +149,6 @@ const handleClickDel = (id: number, row: Commodity) => {
     location.reload()
 
 }
-
 // 选择函数
 const handleSelectionChange = (val: Commodity[]) => {
     multipleSelection.value = val
@@ -174,6 +178,13 @@ const handleCurrentChange = (val: number) => {
 // 子组件创建成功的回调函数
 const afterCreate = (ruleForm: any) => {
     dialogFormVisible.value = false
+    console.log(ruleForm);
+    // 刷新页面
+    location.reload()
+}
+
+const afterEdit = (ruleForm: any) => {
+    dialogFormVisibleEdit.value = false
     console.log(ruleForm);
     // 刷新页面
     location.reload()

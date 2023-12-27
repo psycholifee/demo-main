@@ -21,6 +21,9 @@ const commodityApi = {
             url: `/del/${id}`,
         })
     },
+    update: (commodity: Commodity) => {
+        return httpRequest.post({ url: '/update', data: commodity })
+    }
 }
 
 export default commodityApi;
