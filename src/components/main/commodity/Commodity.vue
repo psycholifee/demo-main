@@ -61,8 +61,8 @@
     </el-dialog>
     <!-- 创建订单触发弹窗 -->
     <el-dialog v-model="oderDialog" title="创建订单">
-        选择客户: &nbsp;&nbsp;<el-select v-model="value" class="m-2" placeholder="Select" size="large">
-            <el-option v-for="item in customers" :key="item.value" :label="item.label" :value="item.value" />
+        选择客户: &nbsp;&nbsp;<el-select v-model="value" class="m-2" placeholder="点击选择客户" size="large">
+            <el-option v-for="item in customerNames" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
         <br><br>
         <el-button type="success">确 认</el-button>
@@ -78,10 +78,12 @@ import commodityApi from '../../../api/commodity';
 import { Commodity } from "../../../types/Commodity";
 import Add from './Add.vue';
 import Edit from './Edit.vue';
+import customerApi from '../../../api/customer';
 const value = ref('')
 // 生命周期
 onMounted(() => {
     getTableData()
+    getCustomerNameMap()
 })
 // 数据
 const tableData = ref<Commodity[]>([])
@@ -91,28 +93,24 @@ async function getTableData() {
     const res: any = await commodityApi.list()
     tableData.value = res.data
 }
-const customers = [
-    {
-        value: 'Option1',
-        label: 'Option1',
-    },
-    {
-        value: 'Option2',
-        label: 'Option2',
-    },
-    {
-        value: 'Option3',
-        label: 'Option3',
-    },
-    {
-        value: 'Option4',
-        label: 'Option4',
-    },
-    {
-        value: 'Option5',
-        label: 'Option5',
-    },
-]
+// 获取客户Map api
+async function getCustomerNameMap() {
+    const res: any = await customerApi.names()
+    console.log(res.data);
+    res.data.forEach((element: any) => {
+        customerNames.push(element)
+    });
+    
+    customerNames.forEach(element => {
+        console.log(element);
+    
+        
+    });
+
+
+}
+const customerNames = new Array;
+
 // 查询参数
 const queryParams = ref('')
 // 选择
