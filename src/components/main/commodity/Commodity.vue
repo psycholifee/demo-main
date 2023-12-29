@@ -5,15 +5,26 @@
         <el-button type="primary" :icon="Search" @click="search">查 询</el-button>
         <br />
         <el-input v-model="queryParams" placeholder="输入查询条件" clearable style="width: 400px;" />
+        <el-upload ref="uploadRef" class="upload-demo" action="http://localhost:8888/upload/excel" :auto-upload="false">
+            <template #trigger>
+                <el-button type="primary">选择文件</el-button>
+            </template>
+
+            <el-button class="ml-3" type="success" @click="submitUpload">
+                确认上传
+            </el-button>
+        </el-upload>
     </div>
+
+
     <!-- main -->
     <div>
         <!-- 数据展示 -->
         <el-scrollbar height="650px">
             <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
                 <el-table-column type="selection" width="55" />
-                <el-table-column prop="id" label="编号" width="80" />
-                <el-table-column prop="name" label="产品名称" width="120" />
+                <div v-show="false"><el-table-column prop="id" label="编号" width="80" /></div>
+                <el-table-column prop="name" label="产品名称" width="300" />
                 <el-table-column prop="specification" label="规格" width="300" />
                 <el-table-column prop="unit" label="单位" width="80" />
                 <el-table-column prop="price" label="单价" width="80" />
@@ -61,7 +72,7 @@
   
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue';
-import { ElMessage, ElTable } from 'element-plus';
+import { ElMessage, ElTable, UploadInstance } from 'element-plus';
 import { onMounted, provide, ref } from 'vue';
 import commodityApi from '../../../api/commodity';
 import { Commodity } from "../../../types/Commodity";
@@ -119,7 +130,7 @@ const background = ref(false)
 const disabled = ref(false)
 // 查询
 const search = () => {
-    console.log(queryParams);
+    console.log(queryParams.value);
 }
 
 
@@ -190,6 +201,13 @@ const afterEdit = (ruleForm: any) => {
     location.reload()
 }
 
+
+const uploadRef = ref<UploadInstance>()
+
+const submitUpload = () => {
+    uploadRef.value!.submit()
+    location.reload()
+}
 </script>
 
 
