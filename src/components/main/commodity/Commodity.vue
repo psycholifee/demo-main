@@ -78,6 +78,7 @@ import customerApi from '../../../api/customer';
 import { Commodity } from "../../../types/Commodity";
 import Add from './Add.vue';
 import Edit from './Edit.vue';
+import orderApi from '../../../api/order';
 const value = ref('')
 // 生命周期
 onMounted(() => {
@@ -172,14 +173,20 @@ const afterSelection = () => {
         })
     } else {
         oderDialog.value = true
-        console.log(multipleSelection.value);
     }
 
 }
 
-const createOrder=()=>{
-    console.log(value.value);
-    
+const createOrder = async () => {
+    console.log("客户id:", value.value);
+    console.log("订单商品详情:", multipleSelection.value);
+    const orderDTO = {
+        customerId: parseInt(value.value),
+        commodities: multipleSelection.value
+    }
+    await orderApi.create(orderDTO)
+
+
 }
 // 分页函数
 const handleSizeChange = (val: number) => {
