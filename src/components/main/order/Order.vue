@@ -1,11 +1,11 @@
 <template>
-    <div>
-        这是order
-    </div>
+        order
 </template>
     
 <script setup lang='ts'>
-
+    
 </script>
     
-<style></style>
+<style>
+    
+</style>

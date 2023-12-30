@@ -13,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
     },
     {
         path: "/order",
-        component: () => import("../components/main/oder/Order.vue"),
+        component: () => import("../components/main/order/Order.vue"),
     },
 
 ];

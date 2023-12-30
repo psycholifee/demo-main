@@ -21,9 +21,9 @@
     <div>
         <!-- 数据展示 -->
         <el-scrollbar height="650px">
-            <el-table :data="tableData" style="width: 100%" @selection-change="handleSelectionChange">
-                <el-table-column type="selection" width="55" />
-                <div v-show="false"><el-table-column prop="id" label="编号" width="80" /></div>
+            <el-table :data="filteredData" style="width: 100%" :row-key="getRowKey" @select="handleSelectionChange">
+                <el-table-column type="selection" width="55" :reserve-selection="true" />
+                <el-table-column prop="id" label="编号" width="80" v-show="false" />
                 <el-table-column prop="name" label="产品名称" width="300" />
                 <el-table-column prop="specification" label="规格" width="300" />
                 <el-table-column prop="unit" label="单位" width="80" />
@@ -47,7 +47,7 @@
         </div>
         <!-- 订单功能 -->
         <div style="margin-top: 20px">
-            <el-button @click="afterSelection(multipleSelection)">创 建 订 单</el-button>
+            <el-button @click="afterSelection">创 建 订 单</el-button>
         </div>
     </div>
 
@@ -65,19 +65,19 @@
             <el-option v-for="item in customerNames" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
         <br><br>
-        <el-button type="success">确 认</el-button>
+        <el-button type="success" @click="createOrder">确 认</el-button>
     </el-dialog>
 </template>
   
 <script lang="ts" setup>
 import { Search } from '@element-plus/icons-vue';
 import { ElMessage, ElTable, UploadInstance } from 'element-plus';
-import { onMounted, provide, ref } from 'vue';
+import { computed, onMounted, provide, ref, watch } from 'vue';
 import commodityApi from '../../../api/commodity';
+import customerApi from '../../../api/customer';
 import { Commodity } from "../../../types/Commodity";
 import Add from './Add.vue';
 import Edit from './Edit.vue';
-import customerApi from '../../../api/customer';
 const value = ref('')
 // 生命周期
 onMounted(() => {
@@ -91,27 +91,21 @@ async function getTableData() {
     // const data: any = await getList()
     const res: any = await commodityApi.list()
     tableData.value = res.data
+    // tableData.value.forEach(element => {
+
+    // });
 }
-// 获取客户Map api
+// 获取客户名称 api
 async function getCustomerNameMap() {
     const res: any = await customerApi.names()
-    console.log(res.data);
     res.data.forEach((element: any) => {
         customerNames.push(element)
     });
-
-    customerNames.forEach(element => {
-        console.log(element);
-
-
-    });
-
-
 }
 const customerNames = new Array;
 // 查询参数
 const queryParams = ref('')
-// 选择
+// 选择的
 const multipleSelection = ref<Commodity[]>([])
 // 弹出框
 const dialogFormVisible = ref(false)
@@ -123,10 +117,26 @@ const pageSize = ref(100)
 const small = ref(false)
 const background = ref(false)
 const disabled = ref(false)
-// 查询
-const search = () => {
-    console.log(queryParams.value);
+
+const getRowKey = (row: any) => {
+    return row.id
 }
+const filteredData = computed(() =>
+    tableData.value.filter(item =>
+        item.name.toLowerCase().includes(queryParams.value.toLowerCase())
+    )
+);
+watch(() => queryParams.value, (newValue) => {
+    // 当搜索关键词变化时触发过滤逻辑
+    console.log(newValue);
+});
+// 
+const search = () => {
+    return tableData.value.filter(item =>
+        item.name.toLowerCase().includes(queryParams.value.toLowerCase())
+    );
+}
+
 // 编辑参数
 const params = ({
     flag: true,
@@ -151,24 +161,25 @@ const handleClickDel = (id: number, row: Commodity) => {
 
 }
 // 选择函数
-const handleSelectionChange = (val: Commodity[]) => {
-    // 订单信息
-    multipleSelection.value = val
+const handleSelectionChange = (selection: any,) => {
+    multipleSelection.value = selection
 }
-const afterSelection = (rows: Commodity[]) => {
-    if (rows.length == 0) {
+const afterSelection = () => {
+    if (multipleSelection.value.length == 0) {
         ElMessage({
             message: '请选择产品',
             type: 'warning',
         })
     } else {
         oderDialog.value = true
-        console.log(rows.length);
-        rows.forEach(row => {
-            console.log(row);
-        });
+        console.log(multipleSelection.value);
     }
 
+}
+
+const createOrder=()=>{
+    console.log(value.value);
+    
 }
 // 分页函数
 const handleSizeChange = (val: number) => {
@@ -191,7 +202,6 @@ const afterEdit = (ruleForm: any) => {
     // 刷新页面
     location.reload()
 }
-
 
 const uploadRef = ref<UploadInstance>()
 

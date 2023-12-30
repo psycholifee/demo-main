@@ -23,6 +23,9 @@ const commodityApi = {
     },
     update: (commodity: Commodity) => {
         return httpRequest.post({ url: '/update', data: commodity })
+    },
+    query: (param?: any) => {
+        return httpRequest.get({ url: `/query?param=${param}` })
     }
 }
 
