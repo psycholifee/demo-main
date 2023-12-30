@@ -60,9 +60,16 @@
         <Edit @after-edit="afterEdit"></Edit>
     </el-dialog>
     <!-- 创建订单触发弹窗 -->
-    <el-dialog v-model="oderDialog" title="创建订单">
-        选择客户: &nbsp;&nbsp;<el-select v-model="value" class="m-2" placeholder="点击选择客户" size="large">
+    <el-dialog v-model="oderDialog" title="创建或更新订单">
+        选择客户:&nbsp;&nbsp;<el-select v-model="value" class="m-2" placeholder="点击选择客户" size="large">
             <el-option v-for="item in customerNames" :key="item.id" :label="item.name" :value="item.id" />
+        </el-select>
+        <div>
+            订单名称:&nbsp;&nbsp;<el-input placeholder="输入创建订单名称" v-model="orderName" clearable
+                style="width: 222px;height: 40px;" />
+        </div>
+        选择订单::&nbsp;&nbsp;<el-select v-model="valueOrder" class="m-2" placeholder="不选择创建新订单" size="large">
+            <el-option v-for="item in orderNames" :key="item.oderId" :label="item.orderName" :value="item.orderId" />
         </el-select>
         <br><br>
         <el-button type="success" @click="createOrder">确 认</el-button>
@@ -80,10 +87,13 @@ import Add from './Add.vue';
 import Edit from './Edit.vue';
 import orderApi from '../../../api/order';
 const value = ref('')
+const valueOrder = ref('')
+const orderName = ref('')
 // 生命周期
 onMounted(() => {
     getTableData()
     getCustomerNameMap()
+    // getOrderNameMap()
 })
 // 数据
 const tableData = ref<Commodity[]>([])
@@ -97,13 +107,22 @@ async function getTableData() {
     // });
 }
 // 获取客户名称 api
+const customerNames = new Array;
 async function getCustomerNameMap() {
     const res: any = await customerApi.names()
     res.data.forEach((element: any) => {
         customerNames.push(element)
     });
 }
-const customerNames = new Array;
+// 获取订单名称 api
+const orderNames = new Array;
+async function getOrderNameMap() {
+
+    const res: any = await orderApi.query(parseInt(value.value))
+    res.data.forEach((element: any) => {
+        orderNames.push(element)
+    });
+}
 // 查询参数
 const queryParams = ref('')
 // 选择的
@@ -130,6 +149,11 @@ const filteredData = computed(() =>
 watch(() => queryParams.value, (newValue) => {
     // 当搜索关键词变化时触发过滤逻辑
     console.log(newValue);
+});
+watch(() => value.value, (newValue) => {
+    // 当搜索关键词变化时触发过滤逻辑
+    console.log(newValue);
+    getOrderNameMap()
 });
 // 
 const search = () => {
@@ -176,15 +200,21 @@ const afterSelection = () => {
     }
 
 }
-
+// 创建更新订单 api
 const createOrder = async () => {
-    console.log("客户id:", value.value);
-    console.log("订单商品详情:", multipleSelection.value);
     const orderDTO = {
         customerId: parseInt(value.value),
+        orderId: parseInt(valueOrder.value),
+        orderName: orderName.value,
         commodities: multipleSelection.value
     }
-    await orderApi.create(orderDTO)
+    console.log(orderDTO.orderId);
+    if (!orderDTO.orderId) {
+        await orderApi.create(orderDTO)
+    } else {
+        console.log(orderDTO.orderId);
+        await orderApi.update(orderDTO)
+    }
 
 
 }

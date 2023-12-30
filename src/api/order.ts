@@ -8,15 +8,27 @@ const httpRequest = new HttpRequest({
 });
 interface OrderDTO {
     customerId: number
+    orderId?: number
+    orderName?: string
     commodities: Commodity[]
 }
 const orderApi = {
 
+    names: () => {
+        return httpRequest.get({ url: '/name' })
+    },
+    query: (customerId: number) => {
+        return httpRequest.get({ url: `/query?customerId=${customerId}` })
+    },
     create: (orderDTO: OrderDTO) => {
-        console.log(orderDTO);
-        
+        console.log("create orderDTO", orderDTO);
+
         return httpRequest.post({ url: '/create', data: orderDTO })
     },
+    update: (orderDTO: OrderDTO) => {
+        console.log("update orderDTO", orderDTO);
+        return httpRequest.post({ url: '/update', data: orderDTO })
+    }
 
 
 }
