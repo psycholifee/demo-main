@@ -9,7 +9,7 @@ const httpRequest = new HttpRequest({
 interface OrderDTO {
     customerId: number
     orderId?: number
-    orderName?: string
+    orderName?: string | any
     commodities: Commodity[]
 }
 const orderApi = {

@@ -65,7 +65,7 @@
             <el-option v-for="item in customerNames" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
         <div>
-            订单名称:&nbsp;&nbsp;<el-input placeholder="输入创建订单名称" v-model="orderName" clearable
+            订单名称:&nbsp;&nbsp;<el-input placeholder="输入创建或更新的订单内容" v-model="orderName" clearable
                 style="width: 222px;height: 40px;" />
         </div>
         选择订单::&nbsp;&nbsp;<el-select v-model="valueOrder" class="m-2" placeholder="不选择创建新订单" size="large">
@@ -117,7 +117,6 @@ async function getCustomerNameMap() {
 // 获取订单名称 api
 const orderNames = new Array;
 async function getOrderNameMap() {
-
     const res: any = await orderApi.query(parseInt(value.value))
     res.data.forEach((element: any) => {
         orderNames.push(element)
@@ -210,9 +209,10 @@ const createOrder = async () => {
     }
     console.log(orderDTO.orderId);
     if (!orderDTO.orderId) {
+        // 创建新订单
         await orderApi.create(orderDTO)
     } else {
-        console.log(orderDTO.orderId);
+        // 更新旧订单
         await orderApi.update(orderDTO)
     }
 
