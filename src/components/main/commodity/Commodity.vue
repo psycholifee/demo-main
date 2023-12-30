@@ -66,7 +66,6 @@
         </el-select>
         <br><br>
         <el-button type="success">确 认</el-button>
-        <el-button type="danger">取 消</el-button>
     </el-dialog>
 </template>
   
@@ -100,17 +99,16 @@ async function getCustomerNameMap() {
     res.data.forEach((element: any) => {
         customerNames.push(element)
     });
-    
+
     customerNames.forEach(element => {
         console.log(element);
-    
-        
+
+
     });
 
 
 }
 const customerNames = new Array;
-
 // 查询参数
 const queryParams = ref('')
 // 选择
@@ -119,7 +117,6 @@ const multipleSelection = ref<Commodity[]>([])
 const dialogFormVisible = ref(false)
 const dialogFormVisibleEdit = ref(false)
 const oderDialog = ref(false)
-
 // 分页
 const currentPage = ref(4)
 const pageSize = ref(100)
@@ -130,9 +127,6 @@ const disabled = ref(false)
 const search = () => {
     console.log(queryParams.value);
 }
-
-
-// 编辑
 // 编辑参数
 const params = ({
     flag: true,
@@ -147,8 +141,6 @@ const handleClickEdit = (id: number, row: Commodity) => {
     dialogFormVisibleEdit.value = true
 
 }
-
-
 provide('editCommodity', params)
 // 删除按钮
 const handleClickDel = (id: number, row: Commodity) => {
@@ -160,6 +152,7 @@ const handleClickDel = (id: number, row: Commodity) => {
 }
 // 选择函数
 const handleSelectionChange = (val: Commodity[]) => {
+    // 订单信息
     multipleSelection.value = val
 }
 const afterSelection = (rows: Commodity[]) => {
