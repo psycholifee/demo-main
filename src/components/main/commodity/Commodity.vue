@@ -66,7 +66,7 @@
         </el-select>
         <div>
             订单名称:&nbsp;&nbsp;
-            <el-input placeholder="输入创建或更新的订单内容" v-model="orderName" clearable style="width: 222px;height: 40px;" />
+            <el-input placeholder="输入创建或更新的订单内容" v-model="inputordername" clearable style="width: 222px;height: 40px;" />
         </div>
         选择订单:&nbsp;&nbsp;<el-select v-model="valueOrder" class="m-2" placeholder="不选择创建新订单" size="large"
             @change="geteloption">
@@ -89,7 +89,7 @@ import Add from './Add.vue';
 import Edit from './Edit.vue';
 const value = ref('')
 const valueOrder = ref('')
-const orderName = ref('')
+const inputordername = ref('')
 const eloptionval = ref('')
 // 生命周期
 onMounted(() => {
@@ -217,37 +217,25 @@ const createOrder = async () => {
         orderName: "",
         commodities: multipleSelection.value
     }
-    console.log(!eloptionval.value);
-    console.log(!(valueOrder.value));
-
-    if (!(valueOrder.value && eloptionval.value)) {
-        ElMessage
-            ({
-
-                message: '输入有误检查',
-                type: 'warning',
-            })
-    } else {
+    if (inputordername.value || eloptionval.value) {
         if (!eloptionval.value) {
             // 创建新订单
             console.log("创建新订单");
-            orderDTO.orderName = orderName.value
+            orderDTO.orderName = inputordername.value
             await orderApi.create(orderDTO)
         } else {
             // 更新旧订单
-            console.log("更新旧订单:valueOrder",);
+            console.log("更新订单");
+            console.log("inputordername:", inputordername);
             orderDTO.orderName = eloptionval.value
             await orderApi.update(orderDTO)
         }
-
-        console.log("更新旧订单:valueOrder", valueOrder.value);
-        console.log("更新旧订单:eloptionval", eloptionval.value);
-
+    } else {
+        ElMessage
+            ({
+                message: '输入有误检查', type: 'warning',
+            })
     }
-
-
-
-
 }
 // 获取el-option的val
 const geteloption = (val: any) => {
