@@ -65,11 +65,12 @@
             <el-option v-for="item in customerNames" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
         <div>
-            订单名称:&nbsp;&nbsp;<el-input placeholder="输入创建或更新的订单内容" v-model="orderName" clearable
-                style="width: 222px;height: 40px;" />
+            订单名称:&nbsp;&nbsp;
+            <el-input placeholder="输入创建或更新的订单内容" v-model="orderName" clearable style="width: 222px;height: 40px;" />
         </div>
-        选择订单::&nbsp;&nbsp;<el-select v-model="valueOrder" class="m-2" placeholder="不选择创建新订单" size="large">
-            <el-option v-for="item in orderNames" :key="item.oderId" :label="item.orderName" :value="item.orderId" />
+        选择订单:&nbsp;&nbsp;<el-select v-model="valueOrder" class="m-2" placeholder="不选择创建新订单" size="large"
+            @change="geteloption">
+            <el-option v-for="item in orderNames" :key="item.oderId" :label="item.orderName" :value="item.orderName" />
         </el-select>
         <br><br>
         <el-button type="success" @click="createOrder">确 认</el-button>
@@ -82,13 +83,14 @@ import { ElMessage, ElTable, UploadInstance } from 'element-plus';
 import { computed, onMounted, provide, ref, watch } from 'vue';
 import commodityApi from '../../../api/commodity';
 import customerApi from '../../../api/customer';
+import orderApi from '../../../api/order';
 import { Commodity } from "../../../types/Commodity";
 import Add from './Add.vue';
 import Edit from './Edit.vue';
-import orderApi from '../../../api/order';
 const value = ref('')
 const valueOrder = ref('')
 const orderName = ref('')
+const eloptionval = ref('')
 // 生命周期
 onMounted(() => {
     getTableData()
@@ -106,10 +108,12 @@ async function getTableData() {
 
     // });
 }
-// 获取客户名称 api
+// 获取客户名称和id api
 const customerNames = new Array;
 async function getCustomerNameMap() {
     const res: any = await customerApi.names()
+    console.log("获取客户名称和id", res.data);
+
     res.data.forEach((element: any) => {
         customerNames.push(element)
     });
@@ -117,9 +121,15 @@ async function getCustomerNameMap() {
 // 获取订单名称 api
 const orderNames = new Array;
 async function getOrderNameMap() {
+    console.log(value.value);
+
     const res: any = await orderApi.query(parseInt(value.value))
+    console.log("params", value.value);
+
     res.data.forEach((element: any) => {
         orderNames.push(element)
+        console.log(element);
+
     });
 }
 // 查询参数
@@ -204,19 +214,45 @@ const createOrder = async () => {
     const orderDTO = {
         customerId: parseInt(value.value),
         orderId: parseInt(valueOrder.value),
-        orderName: orderName.value,
+        orderName: "",
         commodities: multipleSelection.value
     }
-    console.log(orderDTO.orderId);
-    if (!orderDTO.orderId) {
-        // 创建新订单
-        await orderApi.create(orderDTO)
+    console.log(!eloptionval.value);
+    console.log(!(valueOrder.value));
+
+    if (!(valueOrder.value && eloptionval.value)) {
+        ElMessage
+            ({
+
+                message: '输入有误检查',
+                type: 'warning',
+            })
     } else {
-        // 更新旧订单
-        await orderApi.update(orderDTO)
+        if (!eloptionval.value) {
+            // 创建新订单
+            console.log("创建新订单");
+            orderDTO.orderName = orderName.value
+            await orderApi.create(orderDTO)
+        } else {
+            // 更新旧订单
+            console.log("更新旧订单:valueOrder",);
+            orderDTO.orderName = eloptionval.value
+            await orderApi.update(orderDTO)
+        }
+
+        console.log("更新旧订单:valueOrder", valueOrder.value);
+        console.log("更新旧订单:eloptionval", eloptionval.value);
+
     }
 
 
+
+
+}
+// 获取el-option的val
+const geteloption = (val: any) => {
+    console.log("el-option的val", val);
+    eloptionval.value = val
 }
 // 分页函数
 const handleSizeChange = (val: number) => {
