@@ -37,13 +37,6 @@
             </el-table>
         </el-scrollbar>
         <br>
-        <!-- 分页功能 -->
-        <div class="demo-pagination-block">
-            <el-pagination v-model:current-page="currentPage" v-model:page-size="pageSize"
-                :page-sizes="[100, 200, 300, 400]" :small="small" :disabled="disabled" :background="background"
-                layout="total, sizes, prev, pager, next, jumper" :total="400" @size-change="handleSizeChange"
-                @current-change="handleCurrentChange" />
-        </div>
         <!-- 订单功能 -->
         <div style="margin-top: 20px">
             <el-button @click="afterSelection">创 建 订 单</el-button>
@@ -59,7 +52,7 @@
         <Edit @after-edit="afterEdit"></Edit>
     </el-dialog>
     <!-- 创建订单触发弹窗 -->
-    <el-dialog v-model="oderDialog" title="创建或更新订单" >
+    <el-dialog v-model="oderDialog" title="创建或更新订单">
         选择客户:&nbsp;&nbsp;<el-select v-model="value" class="m-2" placeholder="点击选择客户" size="large">
             <el-option v-for="item in customerNames" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
@@ -130,13 +123,6 @@ const multipleSelection = ref<Commodity[]>([])
 const dialogFormVisible = ref(false)
 const dialogFormVisibleEdit = ref(false)
 const oderDialog = ref(false)
-// 分页
-const currentPage = ref(4)
-const pageSize = ref(100)
-const small = ref(false)
-const background = ref(false)
-const disabled = ref(false)
-
 const getRowKey = (row: any) => {
     return row.id
 }
@@ -237,13 +223,7 @@ const createOrder = async () => {
 const geteloption = (val: any) => {
     eloptionval.value = val
 }
-// 分页函数
-const handleSizeChange = (val: number) => {
-    console.log(`${val} items per page`)
-}
-const handleCurrentChange = (val: number) => {
-    console.log(`current page: ${val}`)
-}
+
 // 子组件创建成功的回调函数
 const afterCreate = (ruleForm: any) => {
     dialogFormVisible.value = false
