@@ -16,7 +16,6 @@
         </el-upload>
     </div>
 
-
     <!-- main -->
     <div>
         <!-- 数据展示 -->
@@ -95,7 +94,6 @@ const eloptionval = ref('')
 onMounted(() => {
     getTableData()
     getCustomerNameMap()
-    // getOrderNameMap()
 })
 // 数据
 const tableData = ref<Commodity[]>([])
@@ -112,8 +110,6 @@ async function getTableData() {
 const customerNames = new Array;
 async function getCustomerNameMap() {
     const res: any = await customerApi.names()
-    console.log("获取客户名称和id", res.data);
-
     res.data.forEach((element: any) => {
         customerNames.push(element)
     });
@@ -121,15 +117,9 @@ async function getCustomerNameMap() {
 // 获取订单名称 api
 const orderNames = new Array;
 async function getOrderNameMap() {
-    console.log(value.value);
-
     const res: any = await orderApi.query(parseInt(value.value))
-    console.log("params", value.value);
-
     res.data.forEach((element: any) => {
         orderNames.push(element)
-        console.log(element);
-
     });
 }
 // 查询参数
@@ -215,6 +205,7 @@ const createOrder = async () => {
         customerId: parseInt(value.value),
         orderId: parseInt(valueOrder.value),
         orderName: "",
+        newOrderName: "",
         commodities: multipleSelection.value
     }
     if (inputordername.value || eloptionval.value) {
@@ -225,9 +216,12 @@ const createOrder = async () => {
             await orderApi.create(orderDTO)
         } else {
             // 更新旧订单
+            const findOrder = orderNames.find(orderNames => orderNames.orderName === eloptionval.value)
             console.log("更新订单");
             console.log("inputordername:", inputordername);
-            orderDTO.orderName = eloptionval.value
+            orderDTO.orderName = findOrder.orderName
+            orderDTO.orderId = findOrder.orderId
+            orderDTO.newOrderName = inputordername.value
             await orderApi.update(orderDTO)
         }
     } else {
@@ -239,7 +233,6 @@ const createOrder = async () => {
 }
 // 获取el-option的val
 const geteloption = (val: any) => {
-    console.log("el-option的val", val);
     eloptionval.value = val
 }
 // 分页函数
