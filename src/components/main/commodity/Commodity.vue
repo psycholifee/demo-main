@@ -205,7 +205,7 @@ const createOrder = async () => {
         customerId: parseInt(value.value),
         orderId: parseInt(valueOrder.value),
         orderName: "",
-        newOrderName: "",
+        newOrderName: null,
         commodities: multipleSelection.value
     }
     if (inputordername.value || eloptionval.value) {
