@@ -59,7 +59,7 @@
         <Edit @after-edit="afterEdit"></Edit>
     </el-dialog>
     <!-- 创建订单触发弹窗 -->
-    <el-dialog v-model="oderDialog" title="创建或更新订单">
+    <el-dialog v-model="oderDialog" title="创建或更新订单" >
         选择客户:&nbsp;&nbsp;<el-select v-model="value" class="m-2" placeholder="点击选择客户" size="large">
             <el-option v-for="item in customerNames" :key="item.id" :label="item.name" :value="item.id" />
         </el-select>
@@ -214,6 +214,7 @@ const createOrder = async () => {
             console.log("创建新订单");
             orderDTO.orderName = inputordername.value
             await orderApi.create(orderDTO)
+            oderDialog.value = false
         } else {
             // 更新旧订单
             const findOrder = orderNames.find(orderNames => orderNames.orderName === eloptionval.value)
@@ -223,6 +224,7 @@ const createOrder = async () => {
             orderDTO.orderId = findOrder.orderId
             orderDTO.newOrderName = inputordername.value
             await orderApi.update(orderDTO)
+            oderDialog.value = false
         }
     } else {
         ElMessage
