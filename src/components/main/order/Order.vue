@@ -5,7 +5,7 @@
         <el-tree :data="data" show-checkbox node-key="id" :props="defaultProps" @node-click="handleNodeClick" />
       </el-aside>
       <el-main>
-        <router-view></router-view>
+        <Info v-show="infoshow"></Info>
       </el-main>
     </el-container>
   </div>
@@ -14,6 +14,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import infoApi from '../../../api/info';
+import Info from './Info.vue';
 onMounted(() => {
   getInfo()
 
@@ -24,8 +25,12 @@ const getInfo = async () => {
   data.value = trees
 }
 const data = ref([])
+const infoshow = ref(false)
 const handleNodeClick = (node: any) => {
-  if (!node.hasOwnProperty('children')) { console.log(node); }
+  if (!node.hasOwnProperty('children')) {
+    console.log(node)
+    infoshow.value = true
+  }
 }
 const defaultProps = {
   children: 'children',
