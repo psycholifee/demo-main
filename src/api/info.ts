@@ -14,7 +14,10 @@ const infoApi = {
     },
     dedetails: (orderId: number) => {
         return httpRequest.get({ url: `/details/${orderId}` })
-    }
+    },
+    update: (orderInformationViews: any) => {
+        return httpRequest.post({ url: '/update', data: orderInformationViews })
+    },
 }
 
 export default infoApi;
