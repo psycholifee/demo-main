@@ -12,6 +12,9 @@ const infoApi = {
     tree: () => {
         return httpRequest.get({ url: '/tree' })
     },
+    dedetails: (orderId: number) => {
+        return httpRequest.get({ url: `/details/${orderId}` })
+    }
 }
 
 export default infoApi;

@@ -12,13 +12,14 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from 'vue';
+import { onMounted, provide, ref } from 'vue';
 import infoApi from '../../../api/info';
 import Info from './Info.vue';
 onMounted(() => {
   getInfo()
 
 })
+
 // 获取后端数据
 const getInfo = async () => {
   const trees = (await infoApi.tree()).data
@@ -26,12 +27,18 @@ const getInfo = async () => {
 }
 const data = ref([])
 const infoshow = ref(false)
-const handleNodeClick = (node: any) => {
+
+// 给子组件传递信息
+const id = ref('');
+const handleNodeClick = async (node: any) => {
   if (!node.hasOwnProperty('children')) {
     console.log(node)
     infoshow.value = true
+    id.value = node.id;
   }
 }
+provide('id', id)
+
 const defaultProps = {
   children: 'children',
   label: 'name',
