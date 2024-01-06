@@ -20,7 +20,8 @@
     <div>
         <!-- 数据展示 -->
         <el-scrollbar height="650px">
-            <el-table :data="filteredData" style="width: 100%" :row-key="getRowKey" @select="handleSelectionChange">
+            <el-table :data="filteredData" style="width: 100%" :row-key="getRowKey" @select="handleSelectionChange"
+                @select-all="handleSelectAll">
                 <el-table-column type="selection" width="55" :reserve-selection="true" />
                 <el-table-column prop="id" label="编号" width="80" v-show="false" />
                 <el-table-column prop="name" label="产品名称" width="300" />
@@ -171,6 +172,9 @@ const handleClickDel = (id: number, row: Commodity) => {
 
 }
 // 选择函数
+const handleSelectAll = (selection: any) => {
+    multipleSelection.value = selection
+}
 const handleSelectionChange = (selection: any,) => {
     multipleSelection.value = selection
 }
