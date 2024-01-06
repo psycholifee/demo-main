@@ -2,7 +2,7 @@
   <div class="common-layout">
     <el-container>
       <el-aside width="200px">
-        <el-tree :data="data" show-checkbox node-key="id" :props="defaultProps" @node-click="handleNodeClick" />
+        <el-tree :data="data" node-key="id" :props="defaultProps" @node-click="handleNodeClick" class="custom-tree" />
       </el-aside>
       <el-main>
         <Info v-show="infoshow"></Info>
@@ -43,3 +43,9 @@ const defaultProps = {
   label: 'name',
 }
 </script>
+<style lang="less" scoped>
+.custom-tree {
+  font-size: larger;
+  margin: 50% 0;
+}
+</style>

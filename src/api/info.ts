@@ -18,6 +18,9 @@ const infoApi = {
     update: (orderInformationViews: any) => {
         return httpRequest.post({ url: '/update', data: orderInformationViews })
     },
+    excel: (orderInformationViews: any) => {
+        return httpRequest.post({ url: '/excel', data: orderInformationViews })
+    },
 }
 
 export default infoApi;
