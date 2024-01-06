@@ -12,28 +12,36 @@ watch(() => orderId.value, (newValue) => {
 });
 const getOrderInfo = async (orderId: any) => {
   const res = await infoApi.dedetails(orderId)
-  console.log(res.data);
-  console.log(tableData);
   tableData.value = res.data
 }
 
+// 选择
+const multipleSelection = ref([])
+// 选择函数
+const handleSelectAll = (selection: any) => {
+  multipleSelection.value = selection
+}
 
+// 保存功能
+const saveInfo = () => {
+  console.log("saveorderinfo", multipleSelection.value);
+}
 </script>
 <template>
-  <el-table :data="tableData" style="width: 100%" height="800" :border="true">
-    <!-- <el-table-column fixed prop="orderId" label="订单号" width="150" /> -->
+  <el-table :data="tableData" style="width: 100%" height="800" :border="true" @select-all="handleSelectAll">
     <el-table-column type="selection" />
     <el-table-column prop="orderId" label="订单号" width="150" />
     <el-table-column prop="orderName" label="订单名" width="120" />
     <el-table-column prop="commodityId" label="商品号" width="120" />
     <el-table-column prop="commodityName" label="商品名" width="320" />
     <el-table-column prop="unit" label="单位" width="120" />
-    <el-table-column prop="quantity" label="数量" width="120" />
-    <!-- <el-table-column label="数量" width="120">
-      <template #default="scope">
-        <input type="text" :value="scope.row.quantity" />
+    <!-- <el-table-column prop="quantity" label="数量" width="120 " /> -->
+    <el-table-column label="数量" width="120">
+      <template v-slot="scope">
+        <el-input v-model="scope.row.quantity" />
       </template>
-    </el-table-column> -->
+    </el-table-column>
     <el-table-column prop="price" label="单价" width="120" />
   </el-table>
+  <button type="button" @click="saveInfo">保存</button>
 </template>

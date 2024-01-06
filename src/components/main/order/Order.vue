@@ -32,7 +32,6 @@ const infoshow = ref(false)
 const id = ref('');
 const handleNodeClick = async (node: any) => {
   if (!node.hasOwnProperty('children')) {
-    console.log(node)
     infoshow.value = true
     id.value = node.id;
   }
